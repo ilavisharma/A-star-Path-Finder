@@ -1,5 +1,5 @@
-var cols = 25;
-var rows = 25;
+var cols = 50;
+var rows = 50;
 var grid = new Array(cols);
 
 var openSet = []; // set of nodes already evaluated
@@ -38,12 +38,11 @@ function Spot(i, j) {
     this.wall = true;
   }
   this.show = function(col) {
-    fill(col);
     if (this.wall) {
       fill(0);
+      noStroke();
+      ellipse(this.i * w + w / 2, this.j * h + h / 2, w / 2, h / 2);
     }
-    noStroke();
-    ellipse(this.i * w + w / 2, this.j * h + h / 2, w / 2, h / 2);
   };
   //   add the surrounding neighbours
   this.addNeighbors = function(grid) {
@@ -76,7 +75,7 @@ function Spot(i, j) {
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(600, 600);
   console.log("A*");
 
   w = width / cols;
@@ -162,7 +161,7 @@ function draw() {
     return;
   }
 
-  background(0);
+  background(255);
 
   for (var i = 0; i < cols; i++) {
     for (var j = 0; j < rows; j++) {
@@ -193,7 +192,7 @@ function draw() {
   }
 
   noFill();
-  stroke(255);
+  stroke(255, 0, 200);
   strokeWeight(w / 2);
   beginShape();
 
