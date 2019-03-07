@@ -1,5 +1,5 @@
-var cols = 50;
-var rows = 50;
+var cols = 25;
+var rows = 25;
 var grid = new Array(cols);
 
 var openSet = []; // set of nodes already evaluated
@@ -190,4 +190,12 @@ function draw() {
   for (var i = 0; i < path.length; i++) {
     path[i].show(color(0, 0, 255));
   }
+
+  noFill();
+  stroke(255);
+  beginShape();
+  for (var i = 0; i < path.length; i++) {
+    vertex(path[i].i * w + w / 2, path[i].j * h + h / 2);
+  }
+  endShape();
 }
