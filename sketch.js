@@ -1,5 +1,5 @@
-var cols = 5;
-var rows = 5;
+var cols = 25;
+var rows = 25;
 var grid = new Array(cols);
 
 var openSet = []; // set of nodes already evaluated
@@ -9,6 +9,7 @@ var start;
 var end;
 
 var w, h;
+var path = [];
 
 function removeFromArray(array, element) {
   for (var i = array.length - 1; i >= 0; i--) {
@@ -18,12 +19,19 @@ function removeFromArray(array, element) {
   }
 }
 
+function heuristic(a, b) {
+  //   var d = dist(a.i, a.j, b.i, b.j); // dist is p5 func. to calculate distance
+  var d = abs(a.i - b.i) + abs(a.j - b.j);
+  return d;
+}
+
 function Spot(i, j) {
   this.i = i;
   this.j = j;
   this.f = 0;
   this.g = 0;
   this.h = 0;
+  this.previous = undefined;
   this.neighbors = [];
   this.show = function(col) {
     fill(col);
@@ -71,7 +79,7 @@ function setup() {
   }
 
   start = grid[0][0];
-  end = grid[cols - 1][rows - 1];
+  end = grid[cols - 1][3];
 
   openSet.push(start);
 
@@ -92,6 +100,7 @@ function draw() {
     var current = openSet[winner];
 
     if (openSet[winner] === end) {
+      noLoop();
       console.log("DONE");
     }
 
@@ -114,6 +123,10 @@ function draw() {
           neighbor.g = tempG;
           openSet.push(neighbor);
         }
+
+        neighbor.h = heuristic(neighbor, end);
+        neighbor.f = neighbor.g + neighbor.h;
+        neighbor.previous = current;
       }
     }
   } else {
@@ -134,5 +147,18 @@ function draw() {
 
   for (let i = 0; i < openSet.length; i++) {
     openSet[i].show(color(0, 255, 0));
+  }
+
+  // Find the path
+  path = [];
+  var temp = current;
+  path.push(temp);
+  while (temp.previous) {
+    path.push(temp.previous);
+    temp = temp.previous;
+  }
+
+  for (var i = 0; i < path.length; i++) {
+    path[i].show(color(0, 0, 255));
   }
 }
