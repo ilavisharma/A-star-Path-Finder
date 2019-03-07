@@ -19,15 +19,31 @@ function removeFromArray(array, element) {
 }
 
 function Spot(i, j) {
-  this.x = i;
-  this.y = j;
+  this.i = i;
+  this.j = j;
   this.f = 0;
   this.g = 0;
   this.h = 0;
+  this.neighbors = [];
   this.show = function(col) {
     fill(col);
     noStroke();
-    rect(this.x * w, this.y * h, w - 1, h - 1);
+    rect(this.i * w, this.j * h, w - 1, h - 1);
+  };
+  //   add the surrounding neighbours
+  this.addNeighbors = function(grid) {
+    if (i < cols - 1) {
+      this.neighbors.push(grid[this.i + 1][this.j]);
+    }
+    if (i > 0) {
+      this.neighbors.push(grid[this.i - 1][this.j]);
+    }
+    if (j < rows - 1) {
+      this.neighbors.push(grid[this.i][this.j + 1]);
+    }
+    if (j > 0) {
+      this.neighbors.push(grid[this.i][this.j - 1]);
+    }
   };
 }
 
@@ -45,6 +61,12 @@ function setup() {
   for (var i = 0; i < cols; i++) {
     for (var j = 0; j < rows; j++) {
       grid[i][j] = new Spot(i, j);
+    }
+  }
+
+  for (var i = 0; i < cols; i++) {
+    for (var j = 0; j < rows; j++) {
+      grid[i][j].addNeighbors(grid);
     }
   }
 
@@ -76,6 +98,24 @@ function draw() {
     // openSet.remove(current);
     removeFromArray(openSet, current);
     closedSet.push(current);
+
+    var neighbors = current.neighbors;
+    for (var i = 0; i < neighbors.length; i++) {
+      var neighbor = neighbors[i];
+
+      if (!closedSet.includes(neighbor)) {
+        var tempG = current.g + 1;
+
+        if (openSet.includes(neighbor)) {
+          if (tempG < neighbor.g) {
+            neighbor.g = tempG;
+          }
+        } else {
+          neighbor.g = tempG;
+          openSet.push(neighbor);
+        }
+      }
+    }
   } else {
     // no solution
   }
