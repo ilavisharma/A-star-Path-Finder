@@ -10,6 +10,14 @@ var end;
 
 var w, h;
 
+function removeFromArray(array, element) {
+  for (var i = array.length - 1; i >= 0; i--) {
+    if (array[i] == element) {
+      array.splice(i, 1);
+    }
+  }
+}
+
 function Spot(i, j) {
   this.x = i;
   this.y = j;
@@ -52,6 +60,22 @@ function setup() {
 function draw() {
   if (openSet.length > 0) {
     // we can keep going
+    var winner = 0; // has the lowset f
+    for (var i = 0; i < openSet.length; i++) {
+      if (openSet[i].f < openSet[winner].f) {
+        winner = i;
+      }
+    }
+
+    var current = openSet[winner];
+
+    if (openSet[winner] === end) {
+      console.log("DONE");
+    }
+
+    // openSet.remove(current);
+    removeFromArray(openSet, current);
+    closedSet.push(current);
   } else {
     // no solution
   }
