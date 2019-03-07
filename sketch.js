@@ -10,6 +10,7 @@ var end;
 
 var w, h;
 var path = [];
+var noSolution = false;
 
 function removeFromArray(array, element) {
   for (var i = array.length - 1; i >= 0; i--) {
@@ -94,8 +95,6 @@ function setup() {
   end.wall = false;
 
   openSet.push(start);
-
-  console.log(grid);
 }
 
 // this draw loop acts as a while loop in p5 js
@@ -142,7 +141,10 @@ function draw() {
       }
     }
   } else {
+    console.log("NO SOLUTION");
     // no solution
+    noSolution = true;
+    noLoop();
   }
 
   background(0);
@@ -162,12 +164,14 @@ function draw() {
   }
 
   // Find the path
-  path = [];
-  var temp = current;
-  path.push(temp);
-  while (temp.previous) {
-    path.push(temp.previous);
-    temp = temp.previous;
+  if (!noSolution) {
+    path = [];
+    var temp = current;
+    path.push(temp);
+    while (temp.previous) {
+      path.push(temp.previous);
+      temp = temp.previous;
+    }
   }
 
   for (var i = 0; i < path.length; i++) {
